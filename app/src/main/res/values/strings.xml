@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">ps6-final-otake</string>
+    <string-array name="curriculum_array">
+        <item>Informatique</item>
+        <item>Génie de l\'Eau</item>
+        <item>Génie Biologique</item>
+        <item>Electronique</item>
+        <item>Mathématiques</item>
+    </string-array>
 </resources>
