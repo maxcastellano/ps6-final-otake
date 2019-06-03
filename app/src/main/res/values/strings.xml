@@ -7,4 +7,7 @@
         <item>Electronique</item>
         <item>Mathématiques</item>
     </string-array>
+    <string name="new_demand_title">Nouvelle Demande</string>
+    <string name="new_demand_confirmation">Tout confirmer et envoyer</string>
+    <string name="new_demand_add">Ajouter</string>
 </resources>
