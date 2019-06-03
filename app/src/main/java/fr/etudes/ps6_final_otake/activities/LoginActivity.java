@@ -1,5 +1,6 @@
 package fr.etudes.ps6_final_otake.activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,6 +47,9 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d("debug", "onClick: prénom : " + user.getFirstName());
                 Log.d("debug", "onClick: nom : " + user.getLastName());
                 Log.d("debug", "onClick: cursus : " + user.getMajor());
+
+                Intent demandActivity = new Intent(LoginActivity.this, NewDemand.class);
+                startActivity(demandActivity);
             }
         });
     }
