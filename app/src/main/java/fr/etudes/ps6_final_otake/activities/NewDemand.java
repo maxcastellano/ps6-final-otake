@@ -6,12 +6,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,39 +25,45 @@ public class NewDemand extends AppCompatActivity {
 
     private Button confirmBtn;
     private TextView test;
-    private Integer testString = 0;
-    private Map<Integer, Integer> newDemands = new HashMap<>();
     private String url = "https://api.otakedev.com/";
+    private JSONObject jsonBody = new JSONObject();
 
     private View.OnClickListener confirmBtnListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            final RequestQueue requestQueue = Volley.newRequestQueue(NewDemand.this);
-            StringRequest stringRequest = new StringRequest(
-                    Request.Method.GET, url + "status", new Response.Listener<String>() {
+            try {
+                jsonBody.put("supervisor_id", 0);
+                jsonBody.put("student_id", "bc06b188-5f63-4bdb-bd1e-481efa8e91a3");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url + "queue/tickets", jsonBody, new Response.Listener<JSONObject>() {
                 @Override
-                public void onResponse(String response) {
-                    test.setText("Http response status: " + response);
-                    requestQueue.stop();
+                public void onResponse(JSONObject response) {
+                    test.setText("HTTP response: " + response);
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    test.setText("That didn't work!");
-                    requestQueue.stop();
+                    test.setText("HTTP response error"+ error);
                 }
-            }
-            );
-            requestQueue.add(stringRequest);
-//            testString ++;
-//            String str = testString.toString();
-//            test.setText(str);
+            })
+//            {
+//                @Override
+//                public Map<String, String> getHeaders() throws AuthFailureError {
+//                    final Map<String, String> headers = new HashMap<>();
+//                    headers.put("Authorization", "Basic " + "c2FnYXJAa2FydHBheS5jb206cnMwM2UxQUp5RnQzNkQ5NDBxbjNmUDgzNVE3STAyNzI=");//put your token here
+//                    return headers;
+//                }
+//            }
+            ;
+            Volley.newRequestQueue(NewDemand.this).add(jsonObjectRequest);
         }
     };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        newDemands.put(0,0);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_demand);
         setTitle(R.string.new_demand_title);
