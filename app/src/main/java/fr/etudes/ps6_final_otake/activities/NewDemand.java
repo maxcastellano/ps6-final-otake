@@ -1,5 +1,6 @@
 package fr.etudes.ps6_final_otake.activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,13 +19,24 @@ import org.json.JSONObject;
 import fr.etudes.ps6_final_otake.R;
 
 import fr.etudes.ps6_final_otake.R;
+import fr.etudes.ps6_final_otake.models.Ticket;
 
 public class NewDemand extends AppCompatActivity {
 
     private Button confirmBtn;
+    private Button addDemandBtn;
     private TextView test;
     private String url = "https://api.otakedev.com/";
     private JSONObject jsonBody = new JSONObject();
+
+    private View.OnClickListener addDemandBtnListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent demandActivity = new Intent(NewDemand.this, TicketActivity.class);
+            startActivity(demandActivity);
+        }
+    };
+
 
     private View.OnClickListener confirmBtnListener = new View.OnClickListener() {
         @Override
@@ -70,6 +82,9 @@ public class NewDemand extends AppCompatActivity {
         confirmBtn = findViewById(R.id.confirmDemandBtn);
         test = findViewById(R.id.textViewTest);
         confirmBtn.setOnClickListener(confirmBtnListener);
+
+        addDemandBtn = findViewById(R.id.addDemandBtn);
+        addDemandBtn.setOnClickListener(addDemandBtnListener);
     }
 
 }
