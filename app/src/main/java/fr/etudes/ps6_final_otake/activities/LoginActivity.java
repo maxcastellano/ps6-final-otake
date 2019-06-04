@@ -109,11 +109,10 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 MajorModel major = (MajorModel)spinner.getSelectedItem();
-                int major_id = major.getId();
 
                 UserModel user = new UserModel(firstNameInput.getText().toString(),
                                                 lastNameInput.getText().toString(),
-                                                major_id);
+                                                1);
                 try {
                     writeInternalStorage(user);
                 } catch (IOException e) {
