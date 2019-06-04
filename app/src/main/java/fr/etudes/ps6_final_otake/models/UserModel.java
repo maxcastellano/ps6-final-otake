@@ -4,13 +4,13 @@ public class UserModel {
 
     private String firstName;
     private String lastName;
-    private String major;
+    private int major_id;
 
 
-    public UserModel(String firstName, String lastName, String major) {
+    public UserModel(String firstName, String lastName, int major_id) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.major = major;
+        this.major_id = major_id;
     }
 
     public String getFirstName() {
@@ -21,7 +21,7 @@ public class UserModel {
         return lastName;
     }
 
-    public String getMajor() {
-        return major;
+    public int getMajor() {
+        return major_id;
     }
 }
