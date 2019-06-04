@@ -18,9 +18,6 @@ import org.json.JSONObject;
 
 import fr.etudes.ps6_final_otake.R;
 
-import fr.etudes.ps6_final_otake.R;
-import fr.etudes.ps6_final_otake.models.Ticket;
-
 public class NewDemand extends AppCompatActivity {
 
     private Button confirmBtn;
@@ -58,16 +55,7 @@ public class NewDemand extends AppCompatActivity {
                 public void onErrorResponse(VolleyError error) {
                     test.setText("HTTP response error"+ error);
                 }
-            })
-//            {
-//                @Override
-//                public Map<String, String> getHeaders() throws AuthFailureError {
-//                    final Map<String, String> headers = new HashMap<>();
-//                    headers.put("Authorization", "Basic " + "c2FnYXJAa2FydHBheS5jb206cnMwM2UxQUp5RnQzNkQ5NDBxbjNmUDgzNVE3STAyNzI=");//put your token here
-//                    return headers;
-//                }
-//            }
-            ;
+            });
             Volley.newRequestQueue(NewDemand.this).add(jsonObjectRequest);
         }
     };
