@@ -20,6 +20,7 @@ import org.json.JSONObject;
 
 import fr.etudes.ps6_final_otake.R;
 import fr.etudes.ps6_final_otake.fragments.FormFragment;
+import fr.etudes.ps6_final_otake.models.CustomSpinnerOfficeItem;
 
 public class NewDemand extends AppCompatActivity {
 
@@ -47,7 +48,10 @@ public class NewDemand extends AppCompatActivity {
         public void onClick(View v) {
             View view = (View)ticketFormFragment.getView();
             Spinner spinner = (Spinner) view.findViewById(R.id.officeSpinner);
-            targetSupervisor = spinner.getSelectedItem().toString();
+            //TODO find solution for instanceof
+            if (spinner.getSelectedItem() instanceof CustomSpinnerOfficeItem){
+                targetSupervisor = ((CustomSpinnerOfficeItem) spinner.getSelectedItem()).getOffice();
+            }
             Log.d("Selected String >>>>>>>>> ", targetSupervisor);
             try {
                 jsonBody.put("supervisor_id", getCorrespondingSupervisor(targetSupervisor));
@@ -95,15 +99,15 @@ public class NewDemand extends AppCompatActivity {
 
         //TODO replace by http request
         switch (str){
-            case "RI GE - Maria-Paola Santisi d’Avila": supervisor_id = 0;break;
-            case "RI ELEC - Sébastien Bilavarn": supervisor_id = 1; break;
-            case "RI GB - Any Cupo": supervisor_id = 2; break;
-            case "RI GB - Eric Macia": supervisor_id = 3; break;
-            case "RI GE - Pierre Brigode": supervisor_id = 4; break;
-            case "RI MAM - Abderrahmane Habbal": supervisor_id = 5; break;
-            case "RI SI - Anne-Marie Pinna": supervisor_id = 6; break;
-            case "BRI - Julie Maiffret": supervisor_id = 7; break;
-            case "BRI - Joanna Winchcombe": supervisor_id = 8; break;
+            case "RI GE - M.Santisi": supervisor_id = 0;break;
+            case "RI ELEC - M. Bilavran": supervisor_id = 1; break;
+            case "RI GB - Mme. Cupo": supervisor_id = 2; break;
+            case "RI GB - M. Macia": supervisor_id = 3; break;
+            case "RI GE - M. Brigode": supervisor_id = 4; break;
+            case "RI MAM - M. Habbal": supervisor_id = 5; break;
+            case "RI SI - Mme. Pinna": supervisor_id = 6; break;
+            case "BRI - Mme. Maiffret": supervisor_id = 7; break;
+            case "BRI - Mme. winchcombe": supervisor_id = 8; break;
         }
 
         return supervisor_id;

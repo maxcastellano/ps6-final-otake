@@ -29,4 +29,7 @@
         <item>BRI - Julie Maiffret</item>
         <item>BRI - Joanna Winchcombe</item>
     </string-array>
+    <string name="custom_spinner_waiting">Attente estimé: </string>
+    <string name="custom_spinner_rank">Nb de personnes en attentes: </string>
+    <string name="custom_spinner_availability">Disponible</string>
 </resources>
