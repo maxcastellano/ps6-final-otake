@@ -33,8 +33,6 @@ public class NewDemand extends AppCompatActivity {
     private View.OnClickListener addDemandBtnListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Intent demandActivity = new Intent(NewDemand.this, TicketActivity.class);
-            startActivity(demandActivity);
 
 //            holder.mMyFragment = new (mActivity, this);
 //            int id = View.generateViewId();
@@ -70,7 +68,10 @@ public class NewDemand extends AppCompatActivity {
                 }
             });
             Volley.newRequestQueue(NewDemand.this).add(jsonObjectRequest);
+            Intent demandActivity = new Intent(NewDemand.this, TicketActivity.class);
+            startActivity(demandActivity);
         }
+
     };
 
     @Override

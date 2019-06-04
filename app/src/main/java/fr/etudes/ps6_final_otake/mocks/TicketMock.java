@@ -13,10 +13,10 @@ public class TicketMock {
     }
 
     private void initialization(){
-        tickets.add(new Ticket(1,"Question sur l'international","E+241","BRI",30));
-        tickets.add(new Ticket(1,"Question sur l'international","E+235","M.Litovsky",15));
-        tickets.add(new Ticket(2,"Question sur l'international","E+241","BRI",40));
-        tickets.add(new Ticket(2,"Signature","E+235","M.Litovsky",20));
+        tickets.add(new Ticket(1,"Question sur l'international","E+241","BRI",30,"1",1));
+        tickets.add(new Ticket(1,"Question sur l'international","E+235","M.Litovsky",15,"1",2));
+        tickets.add(new Ticket(2,"Question sur l'international","E+241","BRI",40,"2",3));
+        tickets.add(new Ticket(2,"Signature","E+235","M.Litovsky",20,"2",4));
     }
 
     public ArrayList<Ticket> getTickets() {

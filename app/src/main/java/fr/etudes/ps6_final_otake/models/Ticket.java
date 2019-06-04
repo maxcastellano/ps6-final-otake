@@ -6,13 +6,17 @@ public class Ticket {
     private String office;
     private String supervisor;
     private int waitingTime;
+    private String studentId;
+    private int ticketId;
 
-    public Ticket(int rank, String object, String office, String supervisor, int waitingTime){
+    public Ticket(int rank, String object, String office, String supervisor, int waitingTime, String studentId, int ticketId){
         this.rank = rank;
         this.object = object;
         this.office = office;
         this.supervisor = supervisor;
         this.waitingTime = waitingTime;
+        this.studentId = studentId;
+        this.ticketId = ticketId;
     }
 
     public int getRank(){
@@ -30,6 +34,10 @@ public class Ticket {
     public String getSupervisor(){ return this.supervisor; }
 
     public int getWaitingTime(){ return this.waitingTime; }
+
+    public String getStudentId(){ return this.studentId; }
+
+    public int getTicketId() { return this.ticketId; }
 
     public void setRank(int rank){
         this.rank = rank;

@@ -7,12 +7,11 @@
     <fragment
         android:id="@+id/fragment"
         android:name="fr.etudes.ps6_final_otake.fragments.TicketListFragment"
-        android:layout_width="370dp"
-        android:layout_height="516dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="20dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.454"
@@ -26,7 +25,9 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
+        android:background="@drawable/style_button"
         android:text="Ajouter"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="@+id/fragment"
         app:layout_constraintEnd_toEndOf="@+id/fragment" />
 </android.support.constraint.ConstraintLayout>
