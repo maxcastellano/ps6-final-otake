@@ -10,4 +10,23 @@
     <string name="new_demand_title">Nouvelle Demande</string>
     <string name="new_demand_confirmation">Tout confirmer et envoyer</string>
     <string name="new_demand_add">Ajouter</string>
+    <string name="form_object">Objet</string>
+    <string name="form_office">Bureau</string>
+    <string-array name="form_object_content">
+        <item>Signature</item>
+        <item>Info. sur les cours à choisir</item>
+        <item>Info. sur les aides à la mobilité</item>
+        <item>Info. sur les admissions</item>
+    </string-array>
+    <string-array name="form_office_content">
+        <item>RI GE - Maria-Paola Santisi d’Avila</item>
+        <item>RI ELEC - Sébastien Bilavarn</item>
+        <item>RI GB - Any Cupo</item>
+        <item>RI GB - Eric Macia</item>
+        <item>RI GE - Pierre Brigode</item>
+        <item>RI MAM - Abderrahmane Habbal</item>
+        <item>RI SI - Anne-Marie Pinna</item>
+        <item>BRI - Julie Maiffret</item>
+        <item>BRI - Joanna Winchcombe</item>
+    </string-array>
 </resources>
