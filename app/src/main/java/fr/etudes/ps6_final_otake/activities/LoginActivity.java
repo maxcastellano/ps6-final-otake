@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -46,6 +48,9 @@ public class LoginActivity extends AppCompatActivity {
     private EditText lastNameInput;
     private EditText firstNameInput;
 
+    private boolean firstNameHasBeenSelected = false;
+    private boolean lastNameHasBeenSelected = false;
+
     private Button confirmButton;
 
     private RequestQueue queue;
@@ -58,6 +63,53 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        lastNameInput = (EditText) findViewById(R.id.editTextLastName);
+        firstNameInput = (EditText) findViewById(R.id.editTextFirstName);
+
+        confirmButton = (Button) findViewById(R.id.confirmButton);
+
+        confirmButton.setEnabled(false);
+
+        lastNameInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                lastNameHasBeenSelected = true;
+                if(lastNameHasBeenSelected && firstNameHasBeenSelected) {
+                    confirmButton.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        firstNameInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                firstNameHasBeenSelected = true;
+                if(lastNameHasBeenSelected && firstNameHasBeenSelected) {
+                    confirmButton.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         filesDir = this.getFilesDir() + "/login.json";
 
@@ -107,11 +159,6 @@ public class LoginActivity extends AppCompatActivity {
 
 // add it to the RequestQueue
         queue.add(getRequest);
-
-        confirmButton = (Button) findViewById(R.id.confirmButton);
-
-        lastNameInput = (EditText) findViewById(R.id.editTextLastName);
-        firstNameInput = (EditText) findViewById(R.id.editTextFirstName);
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
