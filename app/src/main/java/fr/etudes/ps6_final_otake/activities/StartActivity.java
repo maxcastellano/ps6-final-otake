@@ -24,7 +24,7 @@ public class StartActivity extends AppCompatActivity {
         try {
             InputStream inputStream = new FileInputStream(myFile);
 
-            Intent intent = new Intent(StartActivity.this, LoginActivity.class);
+            Intent intent = new Intent(StartActivity.this, NewDemand.class);
             startActivity(intent);
         }
         catch (FileNotFoundException e) {
