@@ -54,6 +54,7 @@ public class NewDemandActivity extends AppCompatActivity {
                 Log.d("Selected String >>>>>>>>> ", targetSupervisor);
                 try {
                     jsonBody.put("supervisor_id", getCorrespondingSupervisor(targetSupervisor));
+                    //TODO @Maxime Change student_id value !!
                     jsonBody.put("student_id", "bc06b188-5f63-4bdb-bd1e-481efa8e91a3");
                 } catch (JSONException e) {
                     e.printStackTrace();
