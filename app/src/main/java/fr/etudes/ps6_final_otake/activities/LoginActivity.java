@@ -199,27 +199,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 try {
                     fileOutputStream.write(response.toString().getBytes());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                try {
-                    fileOutputStream.flush();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    fileOutputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    fileOutputStream = new FileOutputStream(myFile);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    fileOutputStream.write(json.getBytes());
+                    Log.d("Debug", "onResponse: on a écrit");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

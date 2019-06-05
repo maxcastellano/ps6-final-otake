@@ -17,6 +17,14 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import fr.etudes.ps6_final_otake.R;
 import fr.etudes.ps6_final_otake.fragments.FormFragment;
 import fr.etudes.ps6_final_otake.models.CustomSpinnerOfficeItem;
@@ -54,9 +62,38 @@ public class NewDemandActivity extends AppCompatActivity {
                 Log.d("Selected String >>>>>>>>> ", targetSupervisor);
                 try {
                     jsonBody.put("supervisor_id", getCorrespondingSupervisor(targetSupervisor));
-                    //TODO @Maxime Change student_id value !!
-                    jsonBody.put("student_id", "bc06b188-5f63-4bdb-bd1e-481efa8e91a3");
+                    //TODO @Maxime Change student_id value !
+                    String jsonString;
+                    File file = new File(NewDemandActivity.this.getFilesDir()+"/login.json");
+
+                    InputStream inputStream = new FileInputStream(file);
+                    StringBuilder stringBuilder = new StringBuilder();
+
+                    if (inputStream != null) {
+                        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                        String receiveString = "";
+
+                        while ((receiveString = bufferedReader.readLine()) != null){
+                            stringBuilder.append(receiveString);
+                        }
+                        inputStream.close();
+                        jsonString = stringBuilder.toString();
+
+                        Log.d("Message", jsonString);
+
+                        JSONObject json = new JSONObject(jsonString);
+
+                        String res = json.getString("id");
+                        Log.d("résultat", "onClick: "+res);
+
+                        jsonBody.put("student_id", "res");
+                    }
                 } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
 
