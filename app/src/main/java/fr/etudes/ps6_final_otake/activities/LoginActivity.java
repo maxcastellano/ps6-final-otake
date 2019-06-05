@@ -172,7 +172,7 @@ public class LoginActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                Intent demandActivity = new Intent(LoginActivity.this, NewDemand.class);
+                Intent demandActivity = new Intent(LoginActivity.this, NewDemandActivity.class);
                 startActivity(demandActivity);
             }
         });
@@ -242,7 +242,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         queue.add(postUserRequest);
-        
+
     }
 
 }

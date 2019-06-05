@@ -16,6 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service android:name="org.eclipse.paho.android.service.MqttService" />
         <activity android:name=".activities.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,7 +26,7 @@
         </activity>
         <activity android:name=".activities.TicketActivity" />
         <activity
-            android:name=".activities.NewDemand"
+            android:name=".activities.NewDemandActivity"
             android:exported="true" />
         <activity android:name=".activities.LoginActivity">
         </activity>

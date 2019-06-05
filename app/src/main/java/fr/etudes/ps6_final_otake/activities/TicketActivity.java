@@ -184,7 +184,7 @@ public class TicketActivity extends AppCompatActivity {
         addTicket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent demandActivity = new Intent(TicketActivity.this, NewDemand.class);
+                Intent demandActivity = new Intent(TicketActivity.this, NewDemandActivity.class);
                 startActivity(demandActivity);
             }
         });
