@@ -3,6 +3,7 @@ package fr.etudes.ps6_final_otake.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -15,23 +16,20 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.simple.JSONValue;
 
-import java.io.BufferedReader;
+import org.json.simple.parser.ParseException;
+
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import fr.etudes.ps6_final_otake.R;
@@ -39,12 +37,16 @@ import fr.etudes.ps6_final_otake.models.MajorModel;
 import fr.etudes.ps6_final_otake.models.UserModel;
 
 public class LoginActivity extends AppCompatActivity {
-    Spinner spinner;
+    private Spinner spinner;
 
-    EditText lastNameInput;
-    EditText firstNameInput;
+    private EditText lastNameInput;
+    private EditText firstNameInput;
 
-    Button confirmButton;
+    private Button confirmButton;
+
+    private RequestQueue queue;
+
+    private String filesDir;
 
     private final String url = "https://api.otakedev.com/";
 
@@ -53,9 +55,13 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        filesDir = this.getFilesDir() + "/login.json";
+
         final ArrayList<MajorModel> majorList = new ArrayList<>();
 
-        RequestQueue queue = Volley.newRequestQueue(this);
+        spinner = (Spinner) findViewById(R.id.spinnerCurriculum);
+
+        queue = Volley.newRequestQueue(this);
 
         JsonArrayRequest getRequest = new JsonArrayRequest(Request.Method.GET,
                 url + "universities/majors", null,
@@ -76,8 +82,12 @@ public class LoginActivity extends AppCompatActivity {
                             try {
                                 majorList.add(new MajorModel(item.getInt("id"),
                                         item.getString("title")));
+
+                                ArrayAdapter<CharSequence> adapter = new ArrayAdapter(LoginActivity.this,
+                                        android.R.layout.simple_spinner_item,majorList);
+                                spinner.setAdapter(adapter);
                             } catch (JSONException e) {
-                                Log.d("Erreur", "onResponse: problème conversion");;
+                                Log.d("Erreur", "onResponse: problème conversion");
                             }
                         }
                     }
@@ -96,12 +106,6 @@ public class LoginActivity extends AppCompatActivity {
 
         confirmButton = (Button) findViewById(R.id.confirmButton);
 
-        spinner = (Spinner) findViewById(R.id.spinnerCurriculum);
-
-        ArrayAdapter<CharSequence> adapter = new ArrayAdapter(this,
-                android.R.layout.simple_spinner_item,majorList);
-        spinner.setAdapter(adapter);
-
         lastNameInput = (EditText) findViewById(R.id.editTextLastName);
         firstNameInput = (EditText) findViewById(R.id.editTextFirstName);
 
@@ -110,16 +114,21 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 MajorModel major = (MajorModel)spinner.getSelectedItem();
 
+                Log.d("debug", "onClick: "+major.getId());
+
                 UserModel user = new UserModel(firstNameInput.getText().toString(),
                                                 lastNameInput.getText().toString(),
-                                                1);
+                                                major.getId());
                 try {
+
                     writeInternalStorage(user);
                 } catch (IOException e) {
                     Log.d("erreur", "erreur écriture");
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-
-                readInternalStorage();
 
                 Intent demandActivity = new Intent(LoginActivity.this, NewDemand.class);
                 startActivity(demandActivity);
@@ -127,9 +136,49 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void writeInternalStorage(Object obj) throws IOException {
+    private void writeInternalStorage(UserModel userModel) throws IOException, ParseException, JSONException {
         Gson gson = new Gson();
-        String json = gson.toJson(obj);
+        final String json = gson.toJson(userModel);
+        Log.d("Debug", "writeInternalStorage: "+json);
+
+        JSONObject jsonBody = new JSONObject(json);
+
+        JsonObjectRequest postUserRequest = new JsonObjectRequest(Request.Method.POST, url + "queue/student", jsonBody, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("It worked ",response.toString());
+                File myFile = new File(filesDir);
+
+                FileOutputStream fileOutputStream = null;
+                try {
+                    fileOutputStream = new FileOutputStream(myFile);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    fileOutputStream.write(json.getBytes());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    fileOutputStream.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    fileOutputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("It didn't worked ",error.toString());
+            }
+        });
+        queue.add(postUserRequest);
 
         String myFilePath = this.getFilesDir() + "/login.json";
         File myFile = new File(myFilePath);
@@ -141,34 +190,5 @@ public class LoginActivity extends AppCompatActivity {
         fileOutputStream.close();
     }
 
-    private void readInternalStorage() {
-        Gson gson = new Gson();
-        String text = "";
 
-        try {
-            String myFilePath = this.getFilesDir() + "/login.json";
-            File myFile = new File(myFilePath);
-
-            InputStream inputStream = new FileInputStream(myFile);
-            StringBuilder stringBuilder = new StringBuilder();
-
-            if (inputStream != null) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String receiveString = "";
-
-                while ((receiveString = bufferedReader.readLine()) != null){
-                    stringBuilder.append(receiveString);
-                }
-                inputStream.close();
-                text = stringBuilder.toString();
-
-                Log.d("Message", text);
-            }
-        } catch (FileNotFoundException e) {
-            Log.d("Debug", "readInternalStorage: erreur fichier introuvable");
-        } catch (IOException e) {
-            Log.d("Debug", "readInternalStorage: erreur lecture");
-        }
-    }
 }
