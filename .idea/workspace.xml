@@ -10,6 +10,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="176fc1cc-f8b8-4356-a3d3-22ad6fb8f387" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/fr/etudes/ps6_final_otake/activities/StartActivity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_start.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.bin" afterDir="false" />
@@ -17,10 +19,13 @@
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/classAnalysis.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/javaCompile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/caches/gradle_models.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/gradle_models.ser" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/app/app.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/fr/etudes/ps6_final_otake/activities/LoginActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/fr/etudes/ps6_final_otake/activities/LoginActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/fr/etudes/ps6_final_otake/models/UserModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/fr/etudes/ps6_final_otake/models/UserModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_login.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_login.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -115,7 +120,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/fr/etudes/ps6_final_otake/activities/NewDemand.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-85">
+            <state relative-caret-position="238">
               <caret line="58" column="39" selection-start-line="58" selection-start-column="39" selection-end-line="58" selection-end-column="39" />
               <folding>
                 <element signature="e#1513#3121#0" expanded="true" />
@@ -124,18 +129,6 @@
                 <element signature="e#2680#2898#0" expanded="true" />
                 <element signature="e#2897#2898#0" expanded="true" />
                 <element signature="e#3120#3121#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/fr/etudes/ps6_final_otake/adapters/CustomSpinnerOfficeItemAdapter.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="18" column="68" selection-start-line="18" selection-start-column="68" selection-end-line="18" selection-end-column="68" />
-              <folding>
-                <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -168,11 +161,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/fr/etudes/ps6_final_otake/activities/LoginActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="969">
-              <caret line="57" column="12" selection-start-line="57" selection-start-column="12" selection-end-line="57" selection-end-column="12" />
+            <state relative-caret-position="-1028">
+              <caret line="61" column="19" lean-forward="true" selection-start-line="61" selection-start-column="19" selection-end-line="61" selection-end-column="54" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1959#3280#0" expanded="true" />
@@ -191,22 +184,28 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/fr/etudes/ps6_final_otake/models/MajorModel.java">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_start.xml">
+          <provider selected="true" editor-type-id="android-designer2" />
+          <provider editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/fr/etudes/ps6_final_otake/activities/StartActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+            <state relative-caret-position="346">
+              <caret line="28" column="32" selection-start-line="28" selection-start-column="32" selection-end-line="28" selection-end-column="32" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/fr/etudes/ps6_final_otake/fragments/FormFragment.java">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/fr/etudes/ps6_final_otake/models/MajorModel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="21" column="48" selection-start-line="21" selection-start-column="35" selection-end-line="21" selection-end-column="48" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="34">
+              <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -269,6 +268,7 @@
         <option value="$PROJECT_DIR$/app/src/main/java/fr/etudes/ps6_final_otake/models/UserModel.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_login.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/fr/etudes/ps6_final_otake/activities/LoginActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/fr/etudes/ps6_final_otake/activities/StartActivity.java" />
       </list>
     </option>
   </component>
@@ -523,6 +523,7 @@
   </component>
   <component name="RecentsManager">
     <key name="android.template.packageName">
+      <recent name="fr.etudes.ps6_final_otake.activities" />
       <recent name="fr.etudes.ps6_final_otake" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -709,15 +710,15 @@
       <window_info id="Capture Tool" order="7" />
       <window_info id="Favorites" order="8" side_tool="true" />
       <window_info anchor="bottom" id="Run" order="0" weight="0.32974428" />
-      <window_info anchor="bottom" id="Logcat" order="1" visible="true" weight="0.22804533" />
+      <window_info anchor="bottom" id="Logcat" order="1" weight="0.4022663" />
       <window_info anchor="bottom" id="TODO" order="2" />
       <window_info anchor="bottom" id="Android Profiler" order="3" weight="0.32974428" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.32974428" />
-      <window_info anchor="bottom" id="Terminal" order="5" weight="0.33378196" />
+      <window_info anchor="bottom" id="Terminal" order="5" weight="0.33286119" />
       <window_info anchor="bottom" id="Event Log" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Flutter Performance" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32974428" />
-      <window_info anchor="bottom" id="Build" order="9" weight="0.32294616" />
+      <window_info anchor="bottom" id="Build" order="9" visible="true" weight="0.32152975" />
       <window_info anchor="right" id="Device File Explorer" order="0" side_tool="true" />
       <window_info anchor="right" id="Capture Analysis" order="1" />
       <window_info anchor="right" id="Gradle" order="2" weight="0.32969153" />
@@ -968,7 +969,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/fr/etudes/ps6_final_otake/activities/NewDemand.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-85">
+        <state relative-caret-position="238">
           <caret line="58" column="39" selection-start-line="58" selection-start-column="39" selection-end-line="58" selection-end-column="39" />
           <folding>
             <element signature="e#1513#3121#0" expanded="true" />
@@ -981,10 +982,14 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_start.xml">
+      <provider selected="true" editor-type-id="android-designer2" />
+      <provider editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/fr/etudes/ps6_final_otake/activities/LoginActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="969">
-          <caret line="57" column="12" selection-start-line="57" selection-start-column="12" selection-end-line="57" selection-end-column="12" />
+        <state relative-caret-position="-1028">
+          <caret line="61" column="19" lean-forward="true" selection-start-line="61" selection-start-column="19" selection-end-line="61" selection-end-column="54" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1959#3280#0" expanded="true" />
@@ -997,6 +1002,16 @@
             <element signature="e#6602#6603#0" expanded="true" />
             <element signature="e#6605#6803#0" expanded="true" />
             <element signature="e#6802#6803#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/fr/etudes/ps6_final_otake/activities/StartActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="346">
+          <caret line="28" column="32" selection-start-line="28" selection-start-column="32" selection-end-line="28" selection-end-column="32" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>

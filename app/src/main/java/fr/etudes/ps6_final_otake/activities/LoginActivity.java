@@ -26,10 +26,14 @@ import org.json.JSONObject;
 
 import org.json.simple.parser.ParseException;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import fr.etudes.ps6_final_otake.R;
@@ -124,8 +128,6 @@ public class LoginActivity extends AppCompatActivity {
                     writeInternalStorage(user);
                 } catch (IOException e) {
                     Log.d("erreur", "erreur écriture");
-                } catch (ParseException e) {
-                    e.printStackTrace();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -136,7 +138,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void writeInternalStorage(UserModel userModel) throws IOException, ParseException, JSONException {
+    private void writeInternalStorage(UserModel userModel) throws IOException, JSONException {
         Gson gson = new Gson();
         final String json = gson.toJson(userModel);
         Log.d("Debug", "writeInternalStorage: "+json);
@@ -150,6 +152,27 @@ public class LoginActivity extends AppCompatActivity {
                 File myFile = new File(filesDir);
 
                 FileOutputStream fileOutputStream = null;
+                try {
+                    fileOutputStream = new FileOutputStream(myFile);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    fileOutputStream.write(response.toString().getBytes());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    fileOutputStream.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    fileOutputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 try {
                     fileOutputStream = new FileOutputStream(myFile);
                 } catch (FileNotFoundException e) {
@@ -179,16 +202,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         queue.add(postUserRequest);
-
-        String myFilePath = this.getFilesDir() + "/login.json";
-        File myFile = new File(myFilePath);
-
-        FileOutputStream fileOutputStream = new FileOutputStream(myFile);
-        fileOutputStream.write(json.getBytes());
-
-        fileOutputStream.flush();
-        fileOutputStream.close();
+        
     }
-
 
 }
