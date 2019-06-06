@@ -50,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private String filesDir;
 
-    private final String url = "https://api.otakedev.com/";
+    private final String url = "https://nodered.otakedev.com/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

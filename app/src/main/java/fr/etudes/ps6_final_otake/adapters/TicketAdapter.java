@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.eclipse.paho.android.service.MqttAndroidClient;
+import org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions;
+import org.eclipse.paho.client.mqttv3.IMqttActionListener;
+import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
+import org.eclipse.paho.client.mqttv3.IMqttToken;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -28,8 +37,14 @@ import fr.etudes.ps6_final_otake.models.Ticket;
 public class TicketAdapter extends BaseAdapter {
     private ArrayList<Ticket> mData;
     private LayoutInflater mInflater;
-    private String url = "https://api.otakedev.com/";
+    private String url = "https://nodered.otakedev.com/";
     private JSONObject jsonBody = new JSONObject();
+
+    private static final String TAG = "MQTT";
+    MqttAndroidClient mqttAndroidClient;
+    final String serverUri = "tcp://broker.otakedev.com:8080";
+    String clientId = "ExampleAndroidClient";
+    final String subscriptionTopic = "ticket/delete";
 
     private Button delete;
     private TextView rang_title;
@@ -75,20 +90,12 @@ public class TicketAdapter extends BaseAdapter {
                         .setNegativeButton("Oui", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, url + "queue/tickets/" + mData.get(position).getStudentId() + "/" + mData.get(position).getTicketId(), jsonBody, new Response.Listener<JSONObject>() {
-                                    @Override
-                                    public void onResponse(JSONObject response) {
-
-                                    }
-                                },new Response.ErrorListener() {
-                                    @Override
-                                    public void onErrorResponse(VolleyError error) {
-
-                                    }
-                                });
-                                mData.remove(position);
-                                Volley.newRequestQueue(context).add(request);
-                                notifyDataSetChanged();
+                                MqttMessage message = new MqttMessage(String.valueOf(mData.get(position).getTicketId()).getBytes());
+                                try {
+                                    mqttAndroidClient.publish(subscriptionTopic,message);
+                                } catch (MqttException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         })
                         .setPositiveButton("Non", new DialogInterface.OnClickListener() {
@@ -132,6 +139,68 @@ public class TicketAdapter extends BaseAdapter {
 
     public void setContext(Context context){
         this.context = context;
+        creatMqtt();
+    }
+
+    public void creatMqtt(){
+        clientId = clientId + System.currentTimeMillis();
+
+        mqttAndroidClient = new MqttAndroidClient(context, serverUri, clientId);
+
+        MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
+        mqttConnectOptions.setAutomaticReconnect(true);
+        mqttConnectOptions.setCleanSession(false);
+
+        try {
+            mqttAndroidClient.connect(mqttConnectOptions, null, new IMqttActionListener() {
+                @Override
+                public void onSuccess(IMqttToken asyncActionToken) {
+                    DisconnectedBufferOptions disconnectedBufferOptions = new DisconnectedBufferOptions();
+                    disconnectedBufferOptions.setBufferEnabled(true);
+                    disconnectedBufferOptions.setBufferSize(100);
+                    disconnectedBufferOptions.setPersistBuffer(false);
+                    disconnectedBufferOptions.setDeleteOldestMessages(false);
+                    mqttAndroidClient.setBufferOpts(disconnectedBufferOptions);
+                    subscribeToTopic();
+                }
+
+                @Override
+                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                    Log.d(TAG, "onFailure: " + serverUri);
+                }
+            });
+        } catch (MqttException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void subscribeToTopic() {
+        try {
+            mqttAndroidClient.subscribe(subscriptionTopic, 0, null, new IMqttActionListener() {
+                @Override
+                public void onSuccess(IMqttToken asyncActionToken) {
+                    Log.d(TAG, "onSuccess: Subscribed!");
+                }
+
+                @Override
+                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                    Log.d(TAG, "onFailure: Failed to subscribe");
+                }
+            });
+
+            // THIS DOES NOT WORK!
+            mqttAndroidClient.subscribe(subscriptionTopic, 0, new IMqttMessageListener() {
+                @Override
+                public void messageArrived(String topic, MqttMessage message) throws Exception {
+                    // message Arrived!
+                    Log.d(TAG, "messageArrived: " + topic + " : " + new String(message.getPayload()));
+                }
+            });
+
+        } catch (MqttException ex) {
+            Log.d(TAG, "subscribeToTopic: Exception whilst subscribing");
+            ex.printStackTrace();
+        }
     }
 
 }
