@@ -10,6 +10,7 @@
     <string name="serverUri">tcp://broker.otakedev.com:8080</string>
     <string name="clientId">MyClient</string>
     <string name="new_demand_title">Nouvelle Demande</string>
+    <string name="tickets_title">Mes Tickets</string>
     <string name="new_demand_confirmation">Tout confirmer et envoyer</string>
     <string name="new_demand_add">Ajouter</string>
     <string name="form_object">Objet</string>

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 
 import fr.etudes.ps6_final_otake.R;
@@ -27,6 +28,13 @@ public class FormFragment extends Fragment {
         View view = inflater.inflate(R.layout.form_new_ticket, container, false);
         object = view.findViewById(R.id.objectSpinner);
         office = view.findViewById(R.id.officeSpinner);
+        Button deleteButton = view.findViewById(R.id.deleteDemandBtn);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFragmentManager().beginTransaction().remove(FormFragment.this).commit();
+            }
+        });
 
         objectAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.form_object_content, R.layout.my_spinner);
         //TODO fetch model from database a.k.a replace mock

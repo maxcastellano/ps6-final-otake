@@ -6,25 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".activities.NewDemandActivity">
 
-    <!--<fragment-->
-        <!--android:id="@+id/form_fragment"-->
-        <!--android:name="fr.etudes.ps6_final_otake.fragments.FormFragment"-->
-        <!--android:layout_width="383dp"-->
-        <!--android:layout_height="637dp"-->
-        <!--android:layout_marginStart="8dp"-->
-        <!--android:layout_marginTop="8dp"-->
-        <!--android:layout_marginEnd="8dp"-->
-        <!--android:layout_marginBottom="8dp"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintHorizontal_bias="0.428"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="parent"-->
-        <!--app:layout_constraintVertical_bias="0.0" />-->
-
     <LinearLayout
         android:id="@+id/formButtonView"
-        android:layout_width="388dp"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
@@ -40,19 +24,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/new_demand_add" />
+            android:text="@string/new_demand_add"
+            android:background="@drawable/style_button_add_demand"
+            android:layout_marginRight="10dp"
+            />
 
         <Button
             android:id="@+id/confirmDemandBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="3"
-            android:text="@string/new_demand_confirmation" />
+            android:text="@string/new_demand_confirmation"
+            android:background="@drawable/style_button"/>
     </LinearLayout>
 
     <ScrollView
-        android:layout_width="397dp"
-        android:layout_height="614dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"

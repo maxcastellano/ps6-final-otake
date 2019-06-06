@@ -43,6 +43,7 @@ public class TicketActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ticket);
+        setTitle(R.string.tickets_title);
         clientId = clientId + System.currentTimeMillis();
         listTicket = (ListView)findViewById(R.id.ticket_list);
 

@@ -141,9 +141,6 @@ public class NewDemandActivity extends AppCompatActivity {
 
         addForm();
 
-        // ticketFormFragment = (FormFragment)
-        // getSupportFragmentManager().findFragmentByTag("1");
-
         clientId = clientId + System.currentTimeMillis();
 
         mqttAndroidClient = new MqttAndroidClient(getApplicationContext(), serverUri, clientId);
@@ -247,5 +244,4 @@ public class NewDemandActivity extends AppCompatActivity {
             ex.printStackTrace();
         }
     }
-
 }
