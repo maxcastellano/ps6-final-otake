@@ -114,3 +114,27 @@ gradle-app.setting
 
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
+.gradle/5.1.1/executionHistory/executionHistory.bin
+.gradle/5.1.1/executionHistory/executionHistory.bin
+.gradle/5.1.1/executionHistory/executionHistory.lock
+.gradle/5.1.1/fileHashes/fileHashes.bin
+.gradle/5.1.1/fileHashes/fileHashes.lock
+.gradle/5.1.1/javaCompile/javaCompile.lock
+.gradle/buildOutputCleanup/buildOutputCleanup.lock
+.gradle/buildOutputCleanup/outputFiles.bin
+.idea/caches/gradle_models.ser
+.idea/libraries/Gradle__com_android_support_cardview_v7_28_0_0_aar.xml
+.idea/workspace.xml
+app/app.iml
+.gradle/5.1.1/executionHistory/executionHistory.bin
+.gradle/5.1.1/executionHistory/executionHistory.lock
+.gradle/5.1.1/fileHashes/fileHashes.bin
+.gradle/5.1.1/fileHashes/fileHashes.lock
+.gradle/5.1.1/javaCompile/javaCompile.lock
+.gradle/buildOutputCleanup/buildOutputCleanup.lock
+.gradle/buildOutputCleanup/outputFiles.bin
+.idea/caches/gradle_models.ser
+.idea/libraries/Gradle__com_android_support_cardview_v7_28_0_0_aar.xml
+.idea/workspace.xml
+app/app.iml
+*.bin
