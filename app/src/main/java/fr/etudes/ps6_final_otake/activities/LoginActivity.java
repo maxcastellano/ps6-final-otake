@@ -226,44 +226,38 @@ public class LoginActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        JsonObjectRequest postUserRequest = new JsonObjectRequest(Request.Method.POST, url + "queue/student", jsonBody,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d("It worked ", response.toString());
-                        File myFile = new File(filesDir);
+        File myFile = new File(filesDir);
 
-                        FileOutputStream fileOutputStream = null;
-                        try {
-                            fileOutputStream = new FileOutputStream(myFile);
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            fileOutputStream.write(response.toString().getBytes());
-                            Log.d("Debug", "onResponse: on a écrit");
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(myFile);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            final FileOutputStream finalFileOutputStream = fileOutputStream;
+            mqttAndroidClient.subscribe(topicMajor, 0, new IMqttMessageListener() {
+                @Override
+                public void messageArrived(String topic, MqttMessage message) throws Exception {
+                    finalFileOutputStream.write(message.toString().getBytes());
+                    Log.d("Debug", "onResponse: on a écrit");
+                }
+            });
 
-                        try {
-                            fileOutputStream.flush();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            fileOutputStream.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("It didn't worked ", error.toString());
-                    }
-                });
-        queue.add(postUserRequest);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            fileOutputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            fileOutputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
