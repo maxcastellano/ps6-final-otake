@@ -38,6 +38,7 @@ public class NewDemandActivity extends AppCompatActivity {
     private JSONObject jsonBody = new JSONObject();
     private FormFragment ticketFormFragment;
     private Integer nbTicket = 1;
+    public static String STUDENT_ID;
 
     private View.OnClickListener addDemandBtnListener = new View.OnClickListener() {
         @Override
@@ -84,10 +85,10 @@ public class NewDemandActivity extends AppCompatActivity {
 
                         JSONObject json = new JSONObject(jsonString);
 
-                        String res = json.getString("id");
-                        Log.d("résultat", "onClick: "+res);
+                        STUDENT_ID = json.getString("id");
+                        Log.d("résultat", "onClick: "+STUDENT_ID);
 
-                        jsonBody.put("student_id", "res");
+                        jsonBody.put("student_id", STUDENT_ID);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -133,8 +134,6 @@ public class NewDemandActivity extends AppCompatActivity {
         findViewById(R.id.formButtonView).bringToFront();
 
         addForm();
-
-//        ticketFormFragment = (FormFragment) getSupportFragmentManager().findFragmentByTag("1");
     }
 
     private void addForm(){
