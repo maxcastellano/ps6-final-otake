@@ -11,9 +11,21 @@ import android.widget.Spinner;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.eclipse.paho.android.service.MqttAndroidClient;
+import org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions;
+import org.eclipse.paho.client.mqttv3.IMqttActionListener;
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
+import org.eclipse.paho.client.mqttv3.IMqttToken;
+import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,7 +45,13 @@ public class NewDemandActivity extends AppCompatActivity {
 
     private Button confirmBtn;
     private Button addDemandBtn;
-    private String url = "https://api.otakedev.com/";
+    private static final String TAG = "MQTT";
+    MqttAndroidClient mqttAndroidClient;
+
+    final String serverUri = "tcp://broker.otakedev.com:8080";
+    String clientId = "ExampleAndroidClient";
+
+    final String subscriptionTopic = "ticket/post";
     private String targetSupervisor;
     private JSONObject jsonBody = new JSONObject();
     private FormFragment ticketFormFragment;
@@ -47,25 +65,25 @@ public class NewDemandActivity extends AppCompatActivity {
         }
     };
 
-
     private View.OnClickListener confirmBtnListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
 
-            for(Integer i = 1; i < nbTicket; i++){
+            JSONArray jsonArray = new JSONArray();
+            for (Integer i = 1; i < nbTicket; i++) {
                 ticketFormFragment = (FormFragment) getSupportFragmentManager().findFragmentByTag(i.toString());
-                View view = (View)ticketFormFragment.getView();
+                View view = (View) ticketFormFragment.getView();
                 Spinner spinner = (Spinner) view.findViewById(R.id.officeSpinner);
-                //TODO find solution for instanceof
-                if (spinner.getSelectedItem() instanceof CustomSpinnerOfficeItem){
+                // TODO find solution for instanceof
+                if (spinner.getSelectedItem() instanceof CustomSpinnerOfficeItem) {
                     targetSupervisor = ((CustomSpinnerOfficeItem) spinner.getSelectedItem()).getOffice();
                 }
                 Log.d("Selected String >>>>>>>>> ", targetSupervisor);
                 try {
                     jsonBody.put("supervisor_id", getCorrespondingSupervisor(targetSupervisor));
-                    //TODO @Maxime Change student_id value !
+                    // TODO @Maxime Change student_id value !
                     String jsonString;
-                    File file = new File(NewDemandActivity.this.getFilesDir()+"/login.json");
+                    File file = new File(NewDemandActivity.this.getFilesDir() + "/login.json");
 
                     InputStream inputStream = new FileInputStream(file);
                     StringBuilder stringBuilder = new StringBuilder();
@@ -75,7 +93,7 @@ public class NewDemandActivity extends AppCompatActivity {
                         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
                         String receiveString = "";
 
-                        while ((receiveString = bufferedReader.readLine()) != null){
+                        while ((receiveString = bufferedReader.readLine()) != null) {
                             stringBuilder.append(receiveString);
                         }
                         inputStream.close();
@@ -85,10 +103,12 @@ public class NewDemandActivity extends AppCompatActivity {
 
                         JSONObject json = new JSONObject(jsonString);
 
-                        STUDENT_ID = json.getString("id");
-                        Log.d("résultat", "onClick: "+STUDENT_ID);
+                        String res = json.getString("id");
+                        Log.d("résultat", "onClick: " + res);
 
-                        jsonBody.put("student_id", STUDENT_ID);
+                        jsonBody.put("student_id", res);
+                        System.out.println(jsonBody.toString() + "1111");
+                        jsonArray.put(jsonBody);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -98,18 +118,14 @@ public class NewDemandActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url + "queue/tickets", jsonBody, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d("It worked ",response.toString());
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("It didn't worked ",error.toString());
-                    }
-                });
-                Volley.newRequestQueue(NewDemandActivity.this).add(jsonObjectRequest);
+            }
+            Log.d("body", jsonArray.toString());
+
+            MqttMessage message = new MqttMessage(jsonArray.toString().getBytes());
+            try {
+                mqttAndroidClient.publish(subscriptionTopic, message);
+            } catch (MqttException e) {
+                e.printStackTrace();
             }
 
             Intent demandActivity = new Intent(NewDemandActivity.this, TicketActivity.class);
@@ -124,7 +140,7 @@ public class NewDemandActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_demand);
         setTitle(R.string.new_demand_title);
 
-        //Confirm form
+        // Confirm form
         confirmBtn = findViewById(R.id.confirmDemandBtn);
         confirmBtn.setOnClickListener(confirmBtnListener);
 
@@ -134,10 +150,44 @@ public class NewDemandActivity extends AppCompatActivity {
         findViewById(R.id.formButtonView).bringToFront();
 
         addForm();
+
+        // ticketFormFragment = (FormFragment)
+        // getSupportFragmentManager().findFragmentByTag("1");
+
+        clientId = clientId + System.currentTimeMillis();
+
+        mqttAndroidClient = new MqttAndroidClient(getApplicationContext(), serverUri, clientId);
+
+        MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
+        mqttConnectOptions.setAutomaticReconnect(true);
+        mqttConnectOptions.setCleanSession(false);
+
+        try {
+            mqttAndroidClient.connect(mqttConnectOptions, null, new IMqttActionListener() {
+                @Override
+                public void onSuccess(IMqttToken asyncActionToken) {
+                    DisconnectedBufferOptions disconnectedBufferOptions = new DisconnectedBufferOptions();
+                    disconnectedBufferOptions.setBufferEnabled(true);
+                    disconnectedBufferOptions.setBufferSize(100);
+                    disconnectedBufferOptions.setPersistBuffer(false);
+                    disconnectedBufferOptions.setDeleteOldestMessages(false);
+                    mqttAndroidClient.setBufferOpts(disconnectedBufferOptions);
+                    subscribeToTopic();
+                }
+
+                @Override
+                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                    Log.d(TAG, "onFailure: " + serverUri);
+                }
+            });
+        } catch (MqttException ex) {
+            ex.printStackTrace();
+        }
     }
 
-    private void addForm(){
-        getSupportFragmentManager().beginTransaction().add(R.id.formContainerLinear, new FormFragment(), nbTicket.toString()).commit();
+    private void addForm() {
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.formContainerLinear, new FormFragment(), nbTicket.toString()).commit();
         getSupportFragmentManager().executePendingTransactions();
         nbTicket++;
     }
@@ -145,20 +195,85 @@ public class NewDemandActivity extends AppCompatActivity {
     private int getCorrespondingSupervisor(String str) {
         int supervisor_id = -1;
 
-        //TODO replace by http request
-        switch (str){
-            case "RI GE - M.Santisi": supervisor_id = 0;break;
-            case "RI ELEC - M. Bilavran": supervisor_id = 1; break;
-            case "RI GB - Mme. Cupo": supervisor_id = 2; break;
-            case "RI GB - M. Macia": supervisor_id = 3; break;
-            case "RI GE - M. Brigode": supervisor_id = 4; break;
-            case "RI MAM - M. Habbal": supervisor_id = 5; break;
-            case "RI SI - Mme. Pinna": supervisor_id = 6; break;
-            case "BRI - Mme. Maiffret": supervisor_id = 7; break;
-            case "BRI - Mme. winchcombe": supervisor_id = 8; break;
+        // TODO replace by http request
+        switch (str) {
+        case "RI GE - M.Santisi":
+            supervisor_id = 0;
+            break;
+        case "RI ELEC - M. Bilavran":
+            supervisor_id = 1;
+            break;
+        case "RI GB - Mme. Cupo":
+            supervisor_id = 2;
+            break;
+        case "RI GB - M. Macia":
+            supervisor_id = 3;
+            break;
+        case "RI GE - M. Brigode":
+            supervisor_id = 4;
+            break;
+        case "RI MAM - M. Habbal":
+            supervisor_id = 5;
+            break;
+        case "RI SI - Mme. Pinna":
+            supervisor_id = 6;
+            break;
+        case "BRI - Mme. Maiffret":
+            supervisor_id = 7;
+            break;
+        case "BRI - Mme. winchcombe":
+            supervisor_id = 8;
+            break;
         }
 
         return supervisor_id;
     }
 
+    public void subscribeToTopic() {
+        try {
+            mqttAndroidClient.subscribe(subscriptionTopic, 0, null, new IMqttActionListener() {
+                @Override
+                public void onSuccess(IMqttToken asyncActionToken) {
+                    Log.d(TAG, "onSuccess: Subscribed!");
+                }
+
+                @Override
+                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                    Log.d(TAG, "onFailure: Failed to subscribe");
+                }
+            });
+
+            // THIS DOES NOT WORK!
+            mqttAndroidClient.subscribe(subscriptionTopic, 0, new IMqttMessageListener() {
+                @Override
+                public void messageArrived(String topic, MqttMessage message) throws Exception {
+                    // message Arrived!
+                    Log.d(TAG, "messageArrived: " + topic + " : " + new String(message.getPayload()));
+                }
+            });
+
+        } catch (MqttException ex) {
+            Log.d(TAG, "subscribeToTopic: Exception whilst subscribing");
+            ex.printStackTrace();
+        }
+    }
+
+    private void publishMsgToServer(String msg) {
+        try {
+            mqttAndroidClient.publish(subscriptionTopic, msg.getBytes(), 0, true, null, new IMqttActionListener() {
+                @Override
+                public void onSuccess(IMqttToken asyncActionToken) {
+
+                }
+
+                @Override
+                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+
+                }
+            });
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+
+    }
 }

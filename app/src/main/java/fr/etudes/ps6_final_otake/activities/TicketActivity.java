@@ -1,24 +1,13 @@
 package fr.etudes.ps6_final_otake.activities;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
-
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions;
@@ -33,7 +22,6 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 import fr.etudes.ps6_final_otake.R;
@@ -43,15 +31,13 @@ import fr.etudes.ps6_final_otake.models.Ticket;
 public class TicketActivity extends AppCompatActivity {
     private ListView listTicket;
     private Button addTicket;
-    private String url = "https://nodered.otakedev.com/";
-    private JSONArray jsonBody = new JSONArray();
     private ArrayList<Ticket> tickets = new ArrayList<>();
 
     private static final String TAG = "MQTT";
     MqttAndroidClient mqttAndroidClient;
     final String serverUri = "tcp://broker.otakedev.com:8080";
     String clientId = "ExampleAndroidClient";
-    final String subscriptionTopic = "test";
+    final String subscriptionTopic = "ticket/get";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +45,6 @@ public class TicketActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ticket);
         clientId = clientId + System.currentTimeMillis();
         listTicket = (ListView)findViewById(R.id.ticket_list);
-        final LayoutInflater inflater = getLayoutInflater();
-
-        updateTicketList();
 
         mqttAndroidClient = new MqttAndroidClient(getApplicationContext(), serverUri, clientId);
         mqttAndroidClient.setCallback(new MqttCallbackExtended() {
@@ -71,7 +54,6 @@ public class TicketActivity extends AppCompatActivity {
                 if (reconnect) {
                     Log.d(TAG, "Reconnected to : " + serverURI);
                     // Because Clean Session is true, we need to re-subscribe
-                    subscribeToTopic();
                 } else {
                     Log.d(TAG, "Connected to : " + serverURI);
                 }
@@ -85,6 +67,7 @@ public class TicketActivity extends AppCompatActivity {
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 Log.d(TAG, "messageArrived: " + new String(message.getPayload()));
+                subscribeToTopic();
             }
 
             @Override
@@ -118,36 +101,40 @@ public class TicketActivity extends AppCompatActivity {
             ex.printStackTrace();
         }
 
+        addTicket = findViewById(R.id.button_add_ticket);
+        addTicket.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent demandActivity = new Intent(TicketActivity.this, NewDemandActivity.class);
+                startActivity(demandActivity);
+            }
+        });
+
     }
 
-    private void updateTicketList(){
-        tickets.clear();
+    public void setListTicket(String str) throws JSONException {
+        this.tickets.clear();
         final LayoutInflater inflater = getLayoutInflater();
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url + "queue/tickets",jsonBody,new Response.Listener<JSONArray>() {
+        JSONArray ticketList = new JSONArray(str);
+        System.out.println("Array" + ticketList.toString());
+        for(int i = 0; i < ticketList.length(); i++){
+            try {
+                JSONObject jsonObject = (JSONObject)ticketList.get(i);
+                Ticket ticket = new Ticket(jsonObject.getInt("rank"),jsonObject.getString("major"),jsonObject.getString("room"),jsonObject.getString("supervisor"),jsonObject.getInt("rank")*10,jsonObject.getString("student_id"),jsonObject.getInt("id"));
+                this.tickets.add(ticket);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        final TicketAdapter adapter = new TicketAdapter(inflater, this.tickets);
+        System.out.println("adapter" + this.tickets.toString());
+        runOnUiThread(new Runnable() {
             @Override
-            public void onResponse(JSONArray response) {
-                JSONArray ticketArrayList = response;
-                for(int i = 0; i < ticketArrayList.length(); i++){
-                    try {
-                        JSONObject jsonObject = (JSONObject)ticketArrayList.get(i);
-                        Ticket ticket = new Ticket(jsonObject.getInt("rank"),jsonObject.getString("major"),jsonObject.getString("room"),jsonObject.getString("supervisor"),jsonObject.getInt("rank")*10,jsonObject.getString("student_id"),jsonObject.getInt("id"));
-                        tickets.add(ticket);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                TicketAdapter adapter = new TicketAdapter(inflater, tickets);
+            public void run() {
                 adapter.setContext(TicketActivity.this);
                 listTicket.setAdapter(adapter);
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
         });
-        Volley.newRequestQueue(TicketActivity.this).add(request);
-
     }
 
     public void subscribeToTopic() {
@@ -170,7 +157,7 @@ public class TicketActivity extends AppCompatActivity {
                 public void messageArrived(String topic, MqttMessage message) throws Exception {
                     // message Arrived!
                     Log.d(TAG, "messageArrived: " + topic + " : " + new String(message.getPayload()));
-                    updateTicketList();
+                    setListTicket(new String(message.getPayload()));
                 }
             });
 
@@ -178,16 +165,6 @@ public class TicketActivity extends AppCompatActivity {
             Log.d(TAG, "subscribeToTopic: Exception whilst subscribing");
             ex.printStackTrace();
         }
-
-
-        addTicket = findViewById(R.id.button_add_ticket);
-        addTicket.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent demandActivity = new Intent(TicketActivity.this, NewDemandActivity.class);
-                startActivity(demandActivity);
-            }
-        });
     }
 
 }
