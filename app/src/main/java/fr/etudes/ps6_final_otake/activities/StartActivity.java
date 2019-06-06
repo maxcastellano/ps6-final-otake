@@ -39,8 +39,6 @@ public class StartActivity extends AppCompatActivity {
 
         int perms = 200;
 
-        ActivityCompat.requestPermissions( this ,permissions, perms);
-
         if (PermissionChecker.checkSelfPermission(getApplicationContext(), permissions[0]) == PermissionChecker.PERMISSION_GRANTED) {
             MemoryConfig memoryConfig = new MemoryConfig(new Properties());
             memoryConfig.setProperty(BrokerConstants.PERSISTENT_STORE_PROPERTY_NAME,
