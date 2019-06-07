@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import org.apache.log4j.BasicConfigurator;
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions;
@@ -19,6 +21,7 @@ import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,6 +42,7 @@ public class StartActivity extends AppCompatActivity {
     final String serverUri = "tcp://broker.otakedev.com:8080";
     String clientId = "ExampleAndroidClient";
     final String establishedTopic = "established";
+    final String studentIdPostTopic = "student/post";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,7 +177,23 @@ public class StartActivity extends AppCompatActivity {
         File myFile = new File(this.getFilesDir() + "/login.json");
 
         try {
-            InputStream inputStream = new FileInputStream(myFile);
+            InputStream inputStream = new FileInputStream(myFile); //Do not remove
+
+//            //START Identify self for future operation
+//                Gson gson = new Gson();
+//                final String json = gson.toJson(userModel);
+//                Log.d("Debug", "writeInternalStorage: " + json);
+//
+//                JSONObject jsonBody = new JSONObject(json);
+//
+//                MqttMessage message = new MqttMessage(jsonBody.toString().getBytes());
+//                try {
+//                    mqttAndroidClient.publish(studentIdPostTopic, message);
+//                } catch (MqttException e) {
+//                    e.printStackTrace();
+//                }
+//            //END
+
             Intent intent = new Intent(StartActivity.this, NewDemandActivity.class);
             startActivity(intent);
         }

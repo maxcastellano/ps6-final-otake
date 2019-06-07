@@ -62,52 +62,53 @@ public class NewDemandActivity extends AppCompatActivity {
             JSONArray jsonArray = new JSONArray();
             for (Integer i = 1; i < nbTicket; i++) {
                 ticketFormFragment = (FormFragment) getSupportFragmentManager().findFragmentByTag(i.toString());
-                View view = (View) ticketFormFragment.getView();
-                Spinner spinner = (Spinner) view.findViewById(R.id.officeSpinner);
-                // TODO find solution for instanceof
-                if (spinner.getSelectedItem() instanceof CustomSpinnerOfficeItem) {
-                    targetSupervisor = ((CustomSpinnerOfficeItem) spinner.getSelectedItem()).getOffice();
-                }
-                Log.d("Selected String >>>>>>>>> ", targetSupervisor);
-                try {
-                    jsonBody.put("supervisor_id", getCorrespondingSupervisor(targetSupervisor));
-                    // TODO @Maxime Change student_id value !
-                    String jsonString;
-                    File file = new File(NewDemandActivity.this.getFilesDir() + "/login.json");
-
-                    InputStream inputStream = new FileInputStream(file);
-                    StringBuilder stringBuilder = new StringBuilder();
-
-                    if (inputStream != null) {
-                        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                        String receiveString = "";
-
-                        while ((receiveString = bufferedReader.readLine()) != null) {
-                            stringBuilder.append(receiveString);
-                        }
-                        inputStream.close();
-                        jsonString = stringBuilder.toString();
-
-                        Log.d("Message", jsonString);
-
-                        JSONObject json = new JSONObject(jsonString);
-
-                        String res = json.getString("id");
-                        Log.d("résultat", "onClick: " + res);
-
-                        jsonBody.put("student_id", res);
-                        System.out.println(jsonBody.toString() + "1111");
-                        jsonArray.put(jsonBody);
+                if (ticketFormFragment != null){
+                    View view = (View) ticketFormFragment.getView();
+                    Spinner spinner = (Spinner) view.findViewById(R.id.officeSpinner);
+                    // TODO find solution for instanceof
+                    if (spinner.getSelectedItem() instanceof CustomSpinnerOfficeItem) {
+                        targetSupervisor = ((CustomSpinnerOfficeItem) spinner.getSelectedItem()).getOffice();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                    Log.d("Selected String >>>>>>>>> ", targetSupervisor);
+                    try {
+                        jsonBody.put("supervisor_id", getCorrespondingSupervisor(targetSupervisor));
+                        // TODO @Maxime Change student_id value !
+                        String jsonString;
+                        File file = new File(NewDemandActivity.this.getFilesDir() + "/login.json");
 
+                        InputStream inputStream = new FileInputStream(file);
+                        StringBuilder stringBuilder = new StringBuilder();
+
+                        if (inputStream != null) {
+                            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                            String receiveString = "";
+
+                            while ((receiveString = bufferedReader.readLine()) != null) {
+                                stringBuilder.append(receiveString);
+                            }
+                            inputStream.close();
+                            jsonString = stringBuilder.toString();
+
+                            Log.d("Message", jsonString);
+
+                            JSONObject json = new JSONObject(jsonString);
+
+                            String res = json.getString("id");
+                            Log.d("résultat", "onClick: " + res);
+
+                            jsonBody.put("student_id", res);
+                            System.out.println(jsonBody.toString() + "1111");
+                            jsonArray.put(jsonBody);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
             Log.d("body", jsonArray.toString());
 
@@ -182,7 +183,7 @@ public class NewDemandActivity extends AppCompatActivity {
     private int getCorrespondingSupervisor(String str) {
         int supervisor_id = -1;
 
-        // TODO replace by http request
+        // TODO replace by mqtt subscribe
         switch (str) {
         case "RI GE - M.Santisi":
             supervisor_id = 0;
