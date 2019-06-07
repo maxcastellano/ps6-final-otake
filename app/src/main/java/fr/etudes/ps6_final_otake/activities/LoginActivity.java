@@ -65,8 +65,6 @@ public class LoginActivity extends AppCompatActivity {
     private String filesDir;
     private ArrayList<MajorModel> majorList = new ArrayList<>();
 
-    private final String url = "https://nodered.otakedev.com/";
-
     private static final String TAG = "MQTT";
     MqttAndroidClient mqttAndroidClient;
 
