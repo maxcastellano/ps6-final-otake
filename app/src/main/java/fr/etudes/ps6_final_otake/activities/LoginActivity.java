@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -68,11 +69,12 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "MQTT";
     MqttAndroidClient mqttAndroidClient;
 
-    final String serverUri = "tcp://broker.otakedev.com:8080";
+    final String serverUri = "tcp://localhost:8080";
 
     String clientId = "ExampleAndroidClient";
     final String topicMajor = "major/get";
     final String topicStudent = "student/post";
+    final String clientConnectID = "client/connect";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -196,7 +198,7 @@ public class LoginActivity extends AppCompatActivity {
                 UserModel user = new UserModel(firstNameInput.getText().toString(), lastNameInput.getText().toString(),
                         major.getId());
                 try {
-
+                    Toast.makeText(LoginActivity.this, "WRITE TO FILE", Toast.LENGTH_SHORT).show();
                     writeInternalStorage(user);
                 } catch (IOException e) {
                     Log.d("erreur", "erreur écriture");
@@ -219,6 +221,7 @@ public class LoginActivity extends AppCompatActivity {
 
         MqttMessage message = new MqttMessage(jsonBody.toString().getBytes());
         try {
+            Toast.makeText(LoginActivity.this, "PUBLISH MESSAGE", Toast.LENGTH_SHORT).show();
             mqttAndroidClient.publish(topicStudent, message);
         } catch (MqttException e) {
             e.printStackTrace();
@@ -229,20 +232,44 @@ public class LoginActivity extends AppCompatActivity {
         FileOutputStream fileOutputStream = null;
         try {
             fileOutputStream = new FileOutputStream(myFile);
+//            Toast.makeText(LoginActivity.this, "OPEN FILE STREAM" + myFile, Toast.LENGTH_SHORT).show();
         } catch (FileNotFoundException e) {
+//            Toast.makeText(LoginActivity.this, "FILE NOT FOUND", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
         try {
+
+//            Toast.makeText(LoginActivity.this, "TRYING TO WRITE IN JSON", Toast.LENGTH_SHORT).show();
+
+            mqttAndroidClient.subscribe(clientConnectID, 2, null, new IMqttActionListener() {
+                @Override
+                public void onSuccess(IMqttToken asyncActionToken) {
+                    Log.d(TAG, "onSuccess: Subscribed!");
+//                    Toast.makeText(LoginActivity.this, "SUCCEED TO SUBSCRIBE", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                    Log.d(TAG, "onFailure: Failed to subscribe");
+//                    Toast.makeText(LoginActivity.this, "FAILED TO SUBSCRIBE", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+
             final FileOutputStream finalFileOutputStream = fileOutputStream;
-            mqttAndroidClient.subscribe(topicMajor, 0, new IMqttMessageListener() {
+            mqttAndroidClient.subscribe(clientConnectID,2 , new IMqttMessageListener() {
                 @Override
                 public void messageArrived(String topic, MqttMessage message) throws Exception {
                     finalFileOutputStream.write(message.toString().getBytes());
-                    Log.d("Debug", "onResponse: on a écrit");
+                    Toast.makeText(LoginActivity.this, "MESSAGE : " + message.toString(), Toast.LENGTH_SHORT).show();
+                    Log.d("DEBUG", "------------------------------------------------------------------");
+                    Log.d("From client/id", message.toString());
+                    Log.d("DEBUG", "------------------------------------------------------------------");
                 }
             });
 
         } catch (MqttException e) {
+            Toast.makeText(LoginActivity.this, "FAILED TO WRITE IN JSON", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 
@@ -282,6 +309,10 @@ public class LoginActivity extends AppCompatActivity {
                     setListMajor(new String(message.getPayload()));
                 }
             });
+
+//            while(!majorList.isEmpty()){
+//                mqttAndroidClient.unsubscribe(topicMajor);
+//            }
 
         } catch (MqttException ex) {
             Log.d(TAG, "subscribeToTopic: Exception whilst subscribing");

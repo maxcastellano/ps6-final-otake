@@ -35,7 +35,7 @@ public class TicketActivity extends AppCompatActivity {
 
     private static final String TAG = "MQTT";
     MqttAndroidClient mqttAndroidClient;
-    final String serverUri = "tcp://broker.otakedev.com:8080";
+    final String serverUri = "tcp://localhost:8080";
     String clientId = "ExampleAndroidClient";
     final String subscriptionTopic = "ticket/get";
 
